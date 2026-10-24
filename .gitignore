@@ -1,0 +1,6 @@
+docentes
+docentes.exe
+*.o
+*.exe
+DOCENTES.DAT
+report/*.TXT
