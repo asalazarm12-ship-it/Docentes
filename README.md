@@ -2,7 +2,42 @@
 
 Programa de la práctica de Algoritmos (Universidad Mariano Gálvez). Un solo ejecutable, `docentes`, con el menú del diagrama: Agregar, Eliminar, Modificar, Buscar, Manejo de Docente, Reportes y Salir.
 
-`DOCENTES.DAT` es el archivo binario: se lee al abrir y se graba al salir si hubo cambios.
+El seudocódigo completo de cada módulo está en [`pseudocodigo/pseudocodigo.txt`](pseudocodigo/pseudocodigo.txt).
+
+## Registro y arreglos
+
+```
+DOCENTE = REGISTRO
+    CODIGO:   entero
+    NOMBRE:   cadena [50]
+    TELEFONO: cadena [10]
+    EDAD:     entero
+    PUESTO:   entero
+    SALARIO:  real
+    ESTADO:   entero
+
+DOC     = ARREGLO [1..100] DE DOCENTE
+PUESTOS = ARREGLO [1..7]   DE cadena
+
+DOCENTES.DAT        : archivo de DOCENTE
+REPORTE_GENERAL.TXT : archivo de texto
+REPORTE_PUESTOS.TXT : archivo de texto
+REPORTE_DOCENTE.TXT : archivo de texto
+
+ESTADO = 1   docente activo
+ESTADO = 0   docente de baja
+
+El usuario no escribe ESTADO.
+Al agregar, el programa lo pone en 1.
+Al eliminar, el programa lo pone en 0 (baja lógica: el registro sigue en el arreglo).
+
+PUESTOS[1] = PASANTE        PUESTOS[5] = NIVEL 3
+PUESTOS[2] = TEMPORAL       PUESTOS[6] = COORDINADOR
+PUESTOS[3] = NIVEL 1        PUESTOS[7] = DIRECTOR
+PUESTOS[4] = NIVEL 2
+```
+
+`DOCENTES.DAT` se lee al abrir y se graba al salir si hubo cambios.
 
 ---
 
@@ -81,6 +116,10 @@ Si respondes `N`, solo se muestran en pantalla.
 **Diagrama.** El diagrama de flujo está en:
 
 - `diagramas/Diagrama-Docentes.pdf`
+
+**Seudocódigo.** El registro, los arreglos y todos los módulos están en:
+
+- `pseudocodigo/pseudocodigo.txt`
 
 ---
 
@@ -180,6 +219,8 @@ ProyectoFinalAlgoritmos/
 │   └── reporte_docente.cpp
 ├── diagramas/               Diagrama de flujo
 │   └── Diagrama-Docentes.pdf
+├── pseudocodigo/            Seudocódigo del registro y de cada módulo
+│   └── pseudocodigo.txt
 ├── report/                  TXT de reportes (se crea al pedir S)
 ├── Makefile                 Receta para `make` en Linux
 ├── docentes.dev             Proyecto para Dev-C++ en Windows

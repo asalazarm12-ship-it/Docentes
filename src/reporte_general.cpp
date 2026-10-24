@@ -49,7 +49,8 @@ void REPORTE_GENERAL(DOCENTE DOC[], int N, char PUESTOS[][12]) {
          << setw(12) << "TELEFONO"
          << setw(6) << "EDAD"
          << setw(13) << "PUESTO"
-         << right << setw(10) << "SALARIO" << endl;
+         << right << setw(10) << "SALARIO"
+         << "  " << left << setw(10) << "ESTADO" << endl;
     I = 1;
 
     // Recorre los docentes del arreglo, del 1 al N.
@@ -67,7 +68,8 @@ void REPORTE_GENERAL(DOCENTE DOC[], int N, char PUESTOS[][12]) {
                 cout << setw(13) << "INVALIDO";
             }
             cout << right << setw(10) << fixed << setprecision(2)
-                 << DOC[I].SALARIO << endl;
+                 << DOC[I].SALARIO
+                 << "  " << left << setw(10) << "ACTIVO" << endl;
 
             // La misma línea va también al TXT.
             if (ARCH == 'S') {
@@ -82,7 +84,8 @@ void REPORTE_GENERAL(DOCENTE DOC[], int N, char PUESTOS[][12]) {
                     DAT << setw(13) << "INVALIDO";
                 }
                 DAT << right << setw(10) << fixed << setprecision(2)
-                    << DOC[I].SALARIO << endl;
+                    << DOC[I].SALARIO
+                    << "  " << left << setw(10) << "ACTIVO" << endl;
             }
         }
 

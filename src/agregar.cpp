@@ -62,6 +62,7 @@ bool AGREGAR(DOCENTE DOC[], int &N, char PUESTOS[][12]) {
                     cin >> DOC[N].SALARIO;
 
                     DOC[N].CODIGO = COD;
+                    // ESTADO no se pide: 1 es activo.
                     DOC[N].ESTADO = 1;
                     HECHO = true;
 

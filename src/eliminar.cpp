@@ -19,12 +19,16 @@ bool ELIMINAR(DOCENTE DOC[], int N) {
 
     // El código está en alguna posición de 1 a N.
     if (POS > 0) {
-        cout << DOC[POS].CODIGO << " " << DOC[POS].NOMBRE << " "
-             << DOC[POS].ESTADO << endl;
+        cout << DOC[POS].CODIGO << " " << DOC[POS].NOMBRE << " ";
+        if (DOC[POS].ESTADO == 1) {
+            cout << "ACTIVO" << endl;
+        } else {
+            cout << "INACTIVO" << endl;
+        }
         cout << "CONFIRMA LA ELIMINACION? (S/N): ";
         cin >> CONF;
 
-        // El usuario confirmó con S.
+        // El usuario confirmó con S. ESTADO 0 es baja; no se pide al usuario.
         if (CONF == 'S') {
             DOC[POS].ESTADO = 0;
             HECHO = true;

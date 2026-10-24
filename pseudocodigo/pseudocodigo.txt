@@ -1,0 +1,420 @@
+Pseudocódigo — control de docentes
+
+DOCENTE = REGISTRO
+    CODIGO: entero
+    NOMBRE: cadena de caracteres [50]
+    TELEFONO: cadena de caracteres [10]
+    EDAD: entero
+    PUESTO: entero
+    SALARIO: real
+    ESTADO: entero
+{Fin de la definición del registro DOCENTE}
+
+DOC = ARREGLO [1..100] DE DOCENTE
+PUESTOS = ARREGLO [1..7] DE cadena
+
+DOCENTES.DAT : archivo de DOCENTE
+REPORTE_GENERAL.TXT : archivo de texto
+REPORTE_PUESTOS.TXT : archivo de texto
+REPORTE_DOCENTE.TXT : archivo de texto
+
+ESTADO = 1   docente activo
+ESTADO = 0   docente de baja
+
+PUESTOS[1] = 'PASANTE'       PUESTOS[5] = 'NIVEL 3'
+PUESTOS[2] = 'TEMPORAL'      PUESTOS[6] = 'COORDINADOR'
+PUESTOS[3] = 'NIVEL 1'       PUESTOS[7] = 'DIRECTOR'
+PUESTOS[4] = 'NIVEL 2'
+
+{Del programa: N, OPC: entero; HECHO, CAMBIOS, EXITO: lógico}
+
+Principal
+
+Inicio
+    INICIA_PUESTOS (PUESTOS)
+    N ← CARGAR_ARCHIVO (DOC)
+    CAMBIOS ← FALSO
+    OPC ← 1
+    Mientras OPC ≥ 1 y OPC ≤ 6 hacer
+        Escribir 'BIENVENIDO AL GESTOR DE DOCENTES'
+        Escribir '1.) Agregar'
+        Escribir '2.) Eliminar'
+        Escribir '3.) Modificar'
+        Escribir '4.) Buscar'
+        Escribir '5.) Manejo de Docente'
+        Escribir '6.) Reportes'
+        Escribir 'Otro.) Salir'
+        Leer OPC
+        HECHO ← FALSO
+        Si OPC igual
+        Valor 1: Hacer HECHO ← AGREGAR (DOC, N)
+        Valor 2: Hacer HECHO ← ELIMINAR (DOC, N)
+        Valor 3: Hacer HECHO ← MODIFICAR (DOC, N)
+        Valor 4: Hacer BUSCAR (DOC, N, PUESTOS)
+        Valor 5: Hacer HECHO ← MANEJO_DOCENTE (DOC, N, PUESTOS)
+        Valor 6: Hacer REPORTES (DOC, N, PUESTOS)
+        {Fin del condicional}
+        CAMBIOS ← CAMBIOS o HECHO
+    {Fin del ciclo}
+    Si CAMBIOS = VERDADERO entonces
+        EXITO ← GUARDAR_ARCHIVO (DOC, N)
+        Si EXITO = VERDADERO entonces
+            Escribir 'DATOS GUARDADOS CORRECTAMENTE'
+        sino
+            Escribir 'ATENCION: LOS DATOS NO SE PUDIERON GUARDAR'
+        {Fin del condicional}
+    sino
+        Escribir 'NO HUBO CAMBIOS QUE GUARDAR'
+    {Fin del condicional}
+Fin
+
+INICIA_PUESTOS
+
+INICIA_PUESTOS (S PUESTOS)
+    PUESTOS[1] ← 'PASANTE'
+    PUESTOS[2] ← 'TEMPORAL'
+    PUESTOS[3] ← 'NIVEL 1'
+    PUESTOS[4] ← 'NIVEL 2'
+    PUESTOS[5] ← 'NIVEL 3'
+    PUESTOS[6] ← 'COORDINADOR'
+    PUESTOS[7] ← 'DIRECTOR'
+Fin del modulo INICIA_PUESTOS
+
+CARGAR_ARCHIVO
+
+CARGAR_ARCHIVO (S DOC)
+    {Locales: I, CANT: entero; ABIERTO, LEIDO: lógico}
+    CANT ← 0
+    ABIERTO ← Abrir (DOCENTES.DAT, LECTURA)
+    Si ABIERTO = VERDADERO entonces
+        I ← 1
+        LEIDO ← Leer (DOCENTES.DAT, DOC[I])
+        {Lectura adelantada. No pasa de 100}
+        Mientras LEIDO = VERDADERO y I < 100 hacer
+            I ← I + 1
+            LEIDO ← Leer (DOCENTES.DAT, DOC[I])
+        {Fin del ciclo}
+        Si LEIDO = VERDADERO entonces
+            CANT ← I
+        sino
+            CANT ← I - 1
+        {Fin del condicional}
+        Cerrar (DOCENTES.DAT)
+    {Fin del condicional}
+    Devolver CANT
+Fin del modulo CARGAR_ARCHIVO
+
+GUARDAR_ARCHIVO
+
+GUARDAR_ARCHIVO (E DOC, E N)
+    {Locales: I: entero; ABIERTO, GRABADO, EXITO: lógico}
+    ABIERTO ← Abrir (DOCENTES.DAT, ESCRITURA)
+    Si ABIERTO = VERDADERO entonces
+        EXITO ← VERDADERO
+        Repetir con I desde 1 hasta N
+            GRABADO ← Escribir (DOCENTES.DAT, DOC[I])
+            Si GRABADO = FALSO entonces
+                Escribir 'ERROR AL GRABAR EL DOCENTE ', DOC[I].CODIGO
+                EXITO ← FALSO
+            {Fin del condicional}
+        {Fin del ciclo}
+        Cerrar (DOCENTES.DAT)
+    sino
+        EXITO ← FALSO
+    {Fin del condicional}
+    Devolver EXITO
+Fin del modulo GUARDAR_ARCHIVO
+
+AGREGAR
+
+AGREGAR (E/S DOC, E/S N)
+    {Locales: COD, POS: entero; HECHO: lógico}
+    HECHO ← FALSO
+    Si N < 100 entonces
+        Leer COD
+        POS ← BUSCA_CODIGO (DOC, N, COD)
+        Si POS > 0 entonces
+            Escribir 'EL CODIGO YA EXISTE'
+        sino
+            N ← N + 1
+            Leer DOC[N].NOMBRE, DOC[N].TELEFONO, DOC[N].EDAD, DOC[N].PUESTO, DOC[N].SALARIO
+            DOC[N].CODIGO ← COD
+            DOC[N].ESTADO ← 1
+            HECHO ← VERDADERO
+            Escribir 'DOCENTE AGREGADO'
+        {Fin del condicional}
+    sino
+        Escribir 'NO HAY ESPACIO EN EL ARREGLO PARA NUEVOS DOCENTES'
+    {Fin del condicional}
+    Devolver HECHO
+Fin del modulo AGREGAR
+
+ELIMINAR
+
+ELIMINAR (E/S DOC, E N)
+    {Locales: COD, POS: entero; CONF: cadena [1]; HECHO: lógico}
+    HECHO ← FALSO
+    Leer COD
+    POS ← BUSCA_CODIGO (DOC, N, COD)
+    Si POS > 0 entonces
+        Escribir DOC[POS].CODIGO, DOC[POS].NOMBRE, DOC[POS].ESTADO
+        Leer CONF
+        Si CONF = 'S' entonces
+            DOC[POS].ESTADO ← 0
+            HECHO ← VERDADERO
+            Escribir 'DOCENTE MARCADO COMO INACTIVO'
+        sino
+            Escribir 'NO SE REALIZO NINGUN CAMBIO'
+        {Fin del condicional}
+    sino
+        Escribir 'EL CODIGO NO EXISTE'
+    {Fin del condicional}
+    Devolver HECHO
+Fin del modulo ELIMINAR
+
+MODIFICAR
+
+MODIFICAR (E/S DOC, E N)
+    {Locales: COD, POS: entero; HECHO: lógico}
+    HECHO ← FALSO
+    Leer COD
+    POS ← BUSCA_CODIGO (DOC, N, COD)
+    Si POS > 0 entonces
+        Escribir DOC[POS].NOMBRE, DOC[POS].TELEFONO, DOC[POS].EDAD
+        Leer DOC[POS].NOMBRE, DOC[POS].TELEFONO, DOC[POS].EDAD
+        HECHO ← VERDADERO
+        Escribir 'DATOS MODIFICADOS'
+    sino
+        Escribir 'EL CODIGO NO EXISTE'
+    {Fin del condicional}
+    Devolver HECHO
+Fin del modulo MODIFICAR
+
+BUSCAR
+
+BUSCAR (E DOC, E N, E PUESTOS)
+    {Locales: OPB, COD, POS: entero; NOM: cadena [50]}
+    POS ← 0
+    Escribir 'BUSCAR DOCENTE'
+    Escribir '1.) Por codigo'
+    Escribir '2.) Por nombre'
+    Escribir 'Otro.) Regresar'
+    Leer OPB
+    Si OPB igual
+    Valor 1: Hacer Leer COD
+             POS ← BUSCA_CODIGO (DOC, N, COD)
+    Valor 2: Hacer Leer NOM
+             POS ← BUSCA_NOMBRE (DOC, N, NOM)
+    {Fin del condicional}
+    Si POS > 0 entonces
+        Escribir DOC[POS].CODIGO, DOC[POS].NOMBRE, DOC[POS].TELEFONO, DOC[POS].EDAD, PUESTOS[DOC[POS].PUESTO], DOC[POS].SALARIO, DOC[POS].ESTADO
+    sino
+        Escribir 'DOCENTE NO ENCONTRADO'
+    {Fin del condicional}
+Fin del modulo BUSCAR
+
+BUSCA_CODIGO
+
+BUSCA_CODIGO (E DOC, E N, E COD)
+    {Locales: I, POS: entero}
+    I ← 1
+    Mientras I ≤ N y DOC[I].CODIGO ≠ COD hacer
+        I ← I + 1
+    {Fin del ciclo}
+    Si I > N entonces
+        POS ← 0
+    sino
+        POS ← I
+    {Fin del condicional}
+    Devolver POS
+Fin del modulo BUSCA_CODIGO
+
+BUSCA_NOMBRE
+
+BUSCA_NOMBRE (E DOC, E N, E NOM)
+    {Locales: I, POS: entero}
+    I ← 1
+    Mientras I ≤ N y DOC[I].NOMBRE ≠ NOM hacer
+        I ← I + 1
+    {Fin del ciclo}
+    Si I > N entonces
+        POS ← 0
+    sino
+        POS ← I
+    {Fin del condicional}
+    Devolver POS
+Fin del modulo BUSCA_NOMBRE
+
+MANEJO_DOCENTE
+
+MANEJO_DOCENTE (E/S DOC, E N, E PUESTOS)
+    {Locales: OPM: entero; HECHO: lógico}
+    HECHO ← FALSO
+    Escribir 'MANEJO DE DOCENTE'
+    Escribir '1.) Promocion'
+    Escribir '2.) Incrementar salario'
+    Escribir 'Otro.) Regresar'
+    Leer OPM
+    Si OPM igual
+    Valor 1: Hacer HECHO ← PROMOCION (DOC, N, PUESTOS)
+    Valor 2: Hacer HECHO ← INCREMENTAR_SALARIO (DOC, N, PUESTOS)
+    {Fin del condicional}
+    Devolver HECHO
+Fin del modulo MANEJO_DOCENTE
+
+PROMOCION
+
+PROMOCION (E/S DOC, E N, E PUESTOS)
+    {Locales: COD, POS: entero; HECHO: lógico}
+    HECHO ← FALSO
+    Leer COD
+    POS ← BUSCA_CODIGO (DOC, N, COD)
+    Si POS > 0 entonces
+        Escribir DOC[POS].NOMBRE, PUESTOS[DOC[POS].PUESTO]
+        Si DOC[POS].PUESTO < 7 entonces
+            DOC[POS].PUESTO ← DOC[POS].PUESTO + 1
+            HECHO ← VERDADERO
+            Escribir 'DOCENTE PROMOVIDO A ', PUESTOS[DOC[POS].PUESTO]
+        sino
+            Escribir 'EL DOCENTE YA TIENE EL PUESTO MAS ALTO (DIRECTOR)'
+        {Fin del condicional}
+    sino
+        Escribir 'EL CODIGO NO EXISTE'
+    {Fin del condicional}
+    Devolver HECHO
+Fin del modulo PROMOCION
+
+INCREMENTAR_SALARIO
+
+INCREMENTAR_SALARIO (E/S DOC, E N, E PUESTOS)
+    {Locales: COD, POS: entero; NSAL: real; HECHO: lógico}
+    HECHO ← FALSO
+    Leer COD
+    POS ← BUSCA_CODIGO (DOC, N, COD)
+    Si POS > 0 entonces
+        Escribir DOC[POS].CODIGO, DOC[POS].NOMBRE, PUESTOS[DOC[POS].PUESTO], DOC[POS].SALARIO
+        Leer NSAL
+        Si NSAL > 0 entonces
+            DOC[POS].SALARIO ← NSAL
+            HECHO ← VERDADERO
+            Escribir 'SALARIO ACTUALIZADO'
+        sino
+            Escribir 'EL SALARIO DEBE SER MAYOR QUE CERO'
+        {Fin del condicional}
+    sino
+        Escribir 'EL CODIGO NO EXISTE'
+    {Fin del condicional}
+    Devolver HECHO
+Fin del modulo INCREMENTAR_SALARIO
+
+REPORTES
+
+REPORTES (E DOC, E N, E PUESTOS)
+    {Locales: OPR: entero}
+    OPR ← 1
+    Mientras OPR ≥ 1 y OPR ≤ 3 hacer
+        Escribir 'BIENVENIDO AL MENU DE REPORTES'
+        Escribir '1.) Reporte general de docentes'
+        Escribir '2.) Reporte de docentes por puesto'
+        Escribir '3.) Reporte de un docente'
+        Escribir 'Otro.) Regresar al menu anterior'
+        Leer OPR
+        Si OPR igual
+        Valor 1: Hacer REPORTE_GENERAL (DOC, N, PUESTOS)
+        Valor 2: Hacer REPORTE_POR_PUESTO (DOC, N, PUESTOS)
+        Valor 3: Hacer REPORTE_DOCENTE (DOC, N, PUESTOS)
+        {Fin del condicional}
+    {Fin del ciclo}
+Fin del modulo REPORTES
+
+REPORTE_GENERAL
+
+REPORTE_GENERAL (E DOC, E N, E PUESTOS)
+    {Locales: I: entero; ARCH: cadena [1]; ABIERTO: lógico}
+    Escribir '¿DESEA GENERAR EL ARCHIVO DE TEXTO? (S/N)'
+    Leer ARCH
+    Si ARCH = 'S' entonces
+        ABIERTO ← Abrir (REPORTE_GENERAL.TXT, ESCRITURA)
+        Si ABIERTO = FALSO entonces
+            Escribir 'NO SE PUDO CREAR EL ARCHIVO DE TEXTO'
+            ARCH ← 'N'
+        {Fin del condicional}
+    {Fin del condicional}
+    Escribir 'CODIGO | NOMBRE | TELEFONO | EDAD | PUESTO | SALARIO'
+    Repetir con I desde 1 hasta N
+        Si DOC[I].ESTADO = 1 entonces
+            Escribir DOC[I].CODIGO, DOC[I].NOMBRE, DOC[I].TELEFONO, DOC[I].EDAD, PUESTOS[DOC[I].PUESTO], DOC[I].SALARIO
+            Si ARCH = 'S' entonces
+                Escribir (REPORTE_GENERAL.TXT, DOC[I].CODIGO, DOC[I].NOMBRE, DOC[I].TELEFONO, DOC[I].EDAD, PUESTOS[DOC[I].PUESTO], DOC[I].SALARIO)
+            {Fin del condicional}
+        {Fin del condicional}
+    {Fin del ciclo}
+    Si ARCH = 'S' entonces
+        Cerrar (REPORTE_GENERAL.TXT)
+    {Fin del condicional}
+Fin del modulo REPORTE_GENERAL
+
+REPORTE_POR_PUESTO
+
+REPORTE_POR_PUESTO (E DOC, E N, E PUESTOS)
+    {Locales: I, J: entero; CONT: ARREGLO [1..7] DE entero; ARCH: cadena [1]; ABIERTO: lógico}
+    {Hoja 1 y hoja 2, unidas por el conector 1}
+    Escribir '¿DESEA GENERAR EL ARCHIVO DE TEXTO? (S/N)'
+    Leer ARCH
+    Si ARCH = 'S' entonces
+        ABIERTO ← Abrir (REPORTE_PUESTOS.TXT, ESCRITURA)
+        Si ABIERTO = FALSO entonces
+            Escribir 'NO SE PUDO CREAR EL ARCHIVO DE TEXTO'
+            ARCH ← 'N'
+        {Fin del condicional}
+    {Fin del condicional}
+    Repetir con J desde 1 hasta 7
+        CONT[J] ← 0
+    {Fin del ciclo}
+    Repetir con I desde 1 hasta N
+        Si DOC[I].ESTADO = 1 entonces
+            CONT[DOC[I].PUESTO] ← CONT[DOC[I].PUESTO] + 1
+        {Fin del condicional}
+    {Fin del ciclo}
+    Conector 1
+    Escribir 'PUESTO | CANTIDAD'
+    Repetir con J desde 1 hasta 7
+        Escribir PUESTOS[J], CONT[J]
+        Si ARCH = 'S' entonces
+            Escribir (REPORTE_PUESTOS.TXT, PUESTOS[J], CONT[J])
+        {Fin del condicional}
+    {Fin del ciclo}
+    Si ARCH = 'S' entonces
+        Cerrar (REPORTE_PUESTOS.TXT)
+    {Fin del condicional}
+Fin del modulo REPORTE_POR_PUESTO
+
+REPORTE_DOCENTE
+
+REPORTE_DOCENTE (E DOC, E N, E PUESTOS)
+    {Locales: COD, POS: entero; ARCH: cadena [1]; EST: cadena [10]; ABIERTO: lógico}
+    Leer COD
+    POS ← BUSCA_CODIGO (DOC, N, COD)
+    Si POS > 0 entonces
+        Si DOC[POS].ESTADO = 1 entonces
+            EST ← 'ACTIVO'
+        sino
+            EST ← 'INACTIVO'
+        {Fin del condicional}
+        Escribir 'DATOS DEL DOCENTE ', DOC[POS].CODIGO
+        Escribir DOC[POS].NOMBRE, DOC[POS].TELEFONO, DOC[POS].EDAD, PUESTOS[DOC[POS].PUESTO], DOC[POS].SALARIO, EST
+        Escribir '¿DESEA GENERAR EL ARCHIVO DE TEXTO? (S/N)'
+        Leer ARCH
+        Si ARCH = 'S' entonces
+            ABIERTO ← Abrir (REPORTE_DOCENTE.TXT, ESCRITURA)
+            Si ABIERTO = VERDADERO entonces
+                Escribir (REPORTE_DOCENTE.TXT, DOC[POS].CODIGO, DOC[POS].NOMBRE, DOC[POS].TELEFONO, DOC[POS].EDAD, PUESTOS[DOC[POS].PUESTO], DOC[POS].SALARIO, EST)
+                Cerrar (REPORTE_DOCENTE.TXT)
+            sino
+                Escribir 'NO SE PUDO CREAR EL ARCHIVO DE TEXTO'
+            {Fin del condicional}
+        {Fin del condicional}
+    sino
+        Escribir 'EL DOCENTE NO EXISTE'
+    {Fin del condicional}
+Fin del modulo REPORTE_DOCENTE

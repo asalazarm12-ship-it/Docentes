@@ -1,5 +1,6 @@
 #include <iostream>
 #include <iomanip>
+#include <cstring>
 #include "docente.h"
 
 using namespace std;
@@ -10,6 +11,7 @@ void BUSCAR(DOCENTE DOC[], int N, char PUESTOS[][12]) {
     int COD;
     int POS;
     char NOM[51];
+    char EST[11];
 
     POS = 0;
 
@@ -52,9 +54,14 @@ void BUSCAR(DOCENTE DOC[], int N, char PUESTOS[][12]) {
         } else {
             cout << setw(13) << "INVALIDO";
         }
+        if (DOC[POS].ESTADO == 1) {
+            strcpy(EST, "ACTIVO");
+        } else {
+            strcpy(EST, "INACTIVO");
+        }
         cout << right << setw(10) << fixed << setprecision(2)
              << DOC[POS].SALARIO
-             << "  " << left << setw(8) << DOC[POS].ESTADO << endl;
+             << "  " << left << setw(10) << EST << endl;
     } else {
         cout << "DOCENTE NO ENCONTRADO" << endl;
     }
